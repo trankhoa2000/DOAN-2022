@@ -1,0 +1,165 @@
+<div class="container register-form">
+  <div class="row justify-content-center align-items-center">
+    <div class="w-75 form">
+      <div class="col-md-12 form-content">
+        <div class="note">
+          <p class="p-font">Tìm Phòng Trống</p>
+        </div>
+        <form [formGroup]="searchForm" *ngIf="searchForm" (ngSubmit)="search()">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="meetingRoom">Tên phòng <span class="text-danger">*</span></label>
+                <select class="form-control col 10 js-example-basic-single select-p"
+                        formControlName="meetingRoom" id="meetingRoom" [(ngModel)]="meetingRoomVariable">
+                  <option [ngValue]="null">Tất cả</option>
+                  <option *ngFor="let c of listMeetingRoom" [ngValue]="c">{{c.name}}</option>
+                </select>
+                <span class="text-danger"
+                      *ngIf="searchForm.controls.meetingRoom.hasError('required') && searchForm.controls.meetingRoom.touched">Vui
+                  lòng chọn phòng.</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6" formGroupName="dateGroup">
+              <div class="form-group">
+                <label for="startDate">Ngày bắt đầu <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="startDate" formControlName="startDate"
+                       [(ngModel)]="startDateVariable"/>
+                <span class="text-danger span-d"
+                      *ngIf="startDate?.hasError('required') && (startDate?.dirty ||startDate?.touched)">Vui lòng nhập ngày bắt đầu. </span>
+                <span class="text-danger span-d"
+                      *ngIf="startDate?.hasError('pattern') && (startDate?.dirty ||startDate?.touched)">Không đúng định dạng: MM/dd/yyyy. </span>
+                <span class="text-danger span-d"
+                      *ngIf="startDate?.hasError('invalidDateNow') && (startDate?.dirty ||startDate?.touched)">Ngày bắt đầu không thể nhỏ hơn ngày hiện tại. </span>
+              </div>
+              <div class="form-group">
+                <label for="endDate">Ngày kết thúc <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="endDate" formControlName="endDate"
+                       [(ngModel)]="endDateVariable"/>
+                <span class="text-danger span-d"
+                      *ngIf="endDate?.hasError('required') && (endDate?.dirty ||endDate?.touched)">Vui lòng nhập ngày kết thúc. </span>
+                <span class="text-danger span-d"
+                      *ngIf="endDate?.hasError('pattern') && (endDate?.dirty ||endDate?.touched)">Không đúng định dạng: MM/dd/yyyy. </span>
+                <span class="text-danger span-d"
+                      *ngIf="endDate?.hasError('invalidDateNow') && (endDate?.dirty ||endDate?.touched)">Ngày đặt nhỏ hơn ngày hiện tại.</span>
+                <span class="text-danger span-d"
+                      *ngIf="dateGroup?.hasError('noMartDate') && (endDate?.dirty ||endDate?.touched)">Ngày kết thúc không thể nhỏ hơn ngày hiện tại. </span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <fieldset formGroupName="hoursGroup">
+                <div class="form-group">
+                  <label for="endHour">Giờ bắt đầu <span class="text-danger">*</span></label>
+                  <input type="time"  class="form-control input-h" formControlName="startHour"
+                         [(ngModel)]="startHourVariable" id="startHour">
+                  <span class="text-danger"
+                        *ngIf="startHourVariable =='chọn giờ' && startHour?.touched">Vui lòng nhập giờ bắt
+                    đầu.</span>
+                </div>
+                <div class="form-group">
+                  <label for="endHour">Giờ kết thúc <span class="text-danger">*</span></label>
+                  <input type="time" class="form-control input-h" formControlName="endHour"
+                         [(ngModel)]="endHourVariable" id="endHour">
+                  <span class="text-danger"
+                        *ngIf="endHourVariable =='chọn giờ' && endHour?.touched">Vui lòng nhập giờ bắt đầu.</span>
+                  <span class="text-danger"
+                        *ngIf="searchForm.controls.hoursGroup.hasError('notmatchHour') && endHour.touched"> Giờ kết
+                    thúc không thể nhỏ hơn hoặc bằng giờ bắt đầu.</span>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="soNguoi">Số người tham dự </label>
+            <input type="number" class="form-control" formControlName="capacityForm" id="soNguoi"
+                   [(ngModel)]="capacity"/>
+            <span class="text-danger"
+                  *ngIf="((capacity <0 || searchForm.controls.capacityForm.hasError('min') )) && searchForm.controls.capacityForm.touched">Số
+              người tham dự phải là số và không được nhỏ hơn 0.</span>
+          </div>
+          <br>
+          <div class="row ">
+            <div class="col-3">Thiết bị:</div>
+            <div class="form-group col-9 ">
+              <br>
+              <table>
+                <tr *ngFor="let p of listProperty ; let i= index">
+                  <td class="td-m"><label [attr.for]="p"> {{ p.name }}</label>
+                  <td class="td-p"><input type="checkbox" (change)="checkCheckBoxvalue( p.id)"/>
+                  </td>
+                </tr>
+              </table>
+              <br>
+            </div>
+          </div>
+          <div class="justify-content-center align-items-center text-center">
+            <button class="btn btnSubmit btn-g" [disabled]="!searchForm.valid"><i
+              class="fa fa-search"
+              aria-hidden="true"></i> Tìm
+              kiếm
+            </button>
+          </div>
+        </form>
+        <fieldset class="fieldset-p">
+          <legend>Kết quả:</legend>
+          <table class="table table-striped tb-a">
+            <thead class="thead-inverse">
+            <tr class="tr-p">
+              <th>STT</th>
+              <th>Tên phòng</th>
+              <th>Khu vực</th>
+              <th> Sức chứa</th>
+              <th> Tài sản</th>
+              <th>Đăng ký</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngIf="listSearch.length==0">
+              <td colspan="6">
+                <span class="text-danger"> Chưa có dữ liệu hoặc dữ liệu bạn tìm kiếm không có.</span>
+              </td>
+            </tr>
+            <tr *ngFor="let c of listSearch | paginate:{itemsPerPage: 5, currentPage:page }; index as i ">
+              <td>{{i + 1}}</td>
+              <td>{{c.name}}</td>
+              <td>{{c.floor}}</td>
+              <td>{{c.capacity }}</td>
+              <td>
+                <span *ngIf=" c.ratings.length==0">Không có tài sản.</span>
+                <div *ngFor="let p of c.ratings; index as j">
+                  <span>{{p.property.name}}</span> <span *ngIf="j!= c.ratings.length-1">,</span>
+                </div>
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary btn-g"
+                        (click)="checkValid(c.id)">
+                  Đăng ký
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <ngb-pagination class="d-flex justify-content-end"
+                          [(page)]="page"
+                          [pageSize]="pageSize"
+                          [collectionSize]="collectionSize"
+                          [maxSize]="5"
+                          [rotate]="true"
+                          [ellipses]="true"
+                          [boundaryLinks]="true">
+            <ng-template ngbPaginationFirst>Trang đầu</ng-template>
+            <ng-template ngbPaginationLast>Trang cuối</ng-template>
+            <ng-template ngbPaginationEllipsis>...</ng-template>
+            <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+          </ngb-pagination>
+        </fieldset>
+      </div>
+      <nav aria-label="Page navigation example" class="page">
+      </nav>
+      <br> <br>
+    </div>
+  </div>
+</div>
+<div class="div-f"></div>

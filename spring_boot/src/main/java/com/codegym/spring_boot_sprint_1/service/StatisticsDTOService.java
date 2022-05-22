@@ -4,6 +4,7 @@ import com.codegym.spring_boot_sprint_1.model.StatisticsDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+
 public interface StatisticsDTOService {
     Page<StatisticsDTO> statisticUser(String startDate, String endDate, Pageable pageable);
 }

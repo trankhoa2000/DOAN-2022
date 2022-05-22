@@ -1,7 +1,5 @@
 package com.codegym.spring_boot_sprint_1.model.dto;
 
-import java.util.Arrays;
-
 public class FeedbackTechnicalDto {
     private Long id;
     private String feedbackTitle;
